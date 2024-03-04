@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Planos{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="plans-container">
+        {% for plan_name in ["Grátis", "Pro", "Empresarial"] %}
+        <div class="plan-box">
+            <h3>{{ plan_name }}</h3>
+            <p class="price">R$ 10,00</p>
+            <hr>
+            <ul class="features-list">
+                <li>Funcionalidade 1</li>
+                <li>Funcionalidade 2</li>
+                <li>Funcionalidade 3</li>
+            </ul>
+            <hr>
+            <button class="btn-buy">Assinar</button>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}ProjectName{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+
+<div class="hero-section">
+    <div class="container">
+        <h1>Transforme suas Reuniões com Inteligência Artificial</h1>
+        <p>Capte cada palavra, analise insights e melhore a acessibilidade em tempo real.</p>
+        <br>
+        <a href="{{ url_for('plans') }}" class="btn-main">Comece Agora!</a>
+    </div>
+</div>
+
+<div class="features-section">
+    <div class="container">
+        <h2>Recursos Principais</h2>
+        <div class="features-grid">
+            <div class="feature-box">
+                <h3>Gravação de Áudio</h3>
+                <p>Grave automaticamente o áudio do seu computador durante qualquer reunião.</p>
+            </div>
+            <div class="feature-box">
+                <h3>Relatórios com IA</h3>
+                <p>Obtenha relatórios detalhados e análises aprofundadas gerados por IA.</p>
+            </div>
+            <div class="feature-box">
+                <h3>Legendas ao Vivo</h3>
+                <p>Ofereça legendas em tempo real em múltiplos idiomas para melhorar a acessibilidade.</p>
+            </div>
+            <div class="feature-box">
+                <h3>Escolha de Idioma</h3>
+                <p>Disponível em uma ampla gama de idiomas, garantindo inclusão global.</p>
+            </div>
+        </div>
+        <br>
+    </div>
+</div>
+
+<div class="call-to-action-section">
+    <div class="container">
+        <h2>Pronto para elevar suas reuniões ao próximo nível?</h2>
+        <p>Experimente nosso serviço hoje e veja o aumento de produtividade ainda hoje.</p>
+        <br>
+        <a href="{{ url_for('plans') }}" class="btn-main">Teste Gratuitamente!</a>
+    </div>
+</div>
+
+<div class="features-section description">
+    <div class="container description">
+        <h2>Descubra Nossa Solução Inovadora</h2>
+        <p>Livre-se da tarefa árdua de tomar notas e concentre-se no que realmente importa.</p>
+        <p>Empregando as mais avançadas tecnologias de Machine Learning, Inteligência Artificial e Programação Neurolinguística, nosso serviço redefine a maneira como as reuniões são documentadas e gerenciadas. Permita que nossa solução faça o trabalho por você, capturando cada momento da sua reunião, gerando relatórios detalhados e organizando suas notas de forma inteligente.</p>
+        <p>Com nossa plataforma, o histórico completo de suas reuniões fica nomeado, organizado e acessível sem nenhum esforço manual. Lembre-se <b>apenas</b> de gravar sua reunião e deixe que cuidemos do restante, transformando seu áudio em insights valiosos.</p>
+        <p>Além disso, oferecemos a flexibilidade de exportar esses relatórios em diversos formatos, facilitando o compartilhamento de informações com os participantes da reunião e garantindo uma colaboração eficaz.</p>
+    </div>
+</div>
+
+<div class="call-to-action-btn-section">
+    <div class="container">
+        <a href="{{ url_for('plans') }}" class="btn-main">Transforme suas Reuniões!</a>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,106 @@
+{% set new_report_option = 'font-weight:700;' %}
+{% extends "dashboard/dashboard_base.html" %}
+
+{% block title %}Novo Relatório{% endblock %}
+
+{% block panel_content %}
+<h2>Novo Relatório</h2>
+<br>
+<form id="audio_upload_form" action="{{ url_for('new_report') }}" method="POST" enctype="multipart/form-data">
+    <input lang="pt-BR" type="file" name="audio_file" accept=".mp3">
+    <br><br>
+    <input class="input-main btn-generate" type="submit" value="Gerar Relatório">
+    <br><br>
+</form>
+<div class="report-loader">
+    <div id="preloader">
+        <div id="loader"></div>
+    </div>
+</div>
+<div class="report">
+    {{ html_content | safe }}
+</div>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const downloadButton = document.querySelector('.btn-download');
+        const newReportButton = document.querySelector('.btn-new');
+        const saveButton = document.querySelector('.btn-save');
+        const generateButton = document.querySelector(".btn-generate");
+        const generateForm = document.querySelector("#audio_upload_form");
+        const reportLoader = document.querySelector(".report-loader");
+
+        if ({{ is_report_generated | safe }}) {
+            generateForm.style.display = "none"
+        }
+
+        if(generateButton) {
+            generateButton.addEventListener('click', function() {
+                generateForm.style.display = "none"
+                reportLoader.style.display = "block"
+            })
+        }
+
+        if (downloadButton) {
+        downloadButton.addEventListener('click', function() {
+            
+            this.classList.add('btn-disabled');
+            
+            Swal.fire({
+                title: 'Download iniciado!',
+                text: 'Seu download foi iniciado. Por favor, verifique sua pasta de downloads.',
+                icon: 'success',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'OK',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    
+                }
+            });
+        });
+    }
+    
+        if (newReportButton) {
+            newReportButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                Swal.fire({
+                    title: 'Tem certeza?',
+                    text: "Você está prestes a criar um novo relatório. Certifique-se de ter salvo ou baixado o relatório atual. O relatório atual será apagado.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Prosseguir',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/new_report';
+                    }
+                });
+            });
+        }
+    
+        // Salvar Relatório
+        if (saveButton) {
+            saveButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                Swal.fire({
+                    title: 'Você deseja salvar o relatório?',
+                    text: "Não recomendamos salvar informações sensíveis.",
+                    icon: 'info',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Salvar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Implemente a lógica de salvamento aqui
+                        console.log('Salvar relatório');
+                    }
+                });
+            });
+        }
+    });
+</script>    
+{% endblock %}
