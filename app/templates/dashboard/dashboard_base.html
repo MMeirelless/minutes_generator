@@ -6,17 +6,17 @@
             <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
                 <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
                     <li class="nav-item">
-                        <a href="{{ url_for('new_report') }}" class="nav-link align-middle px-0">
+                        <a href="{{ url_for('main.new_report') }}" class="nav-link align-middle px-0">
                             <i class="fs-4 bi-table d-block d-md-none"><img src="{{ url_for('static', filename='images/new_report.png') }}" alt="Novo Relatório" width="32" height="32" class="rounded-circle me-2"></i> <span class="ms-1 d-none d-md-inline text-black" style="{{ new_report_option }}">Novo Relatório</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ url_for('my_reports') }}" class="nav-link align-middle px-0">
+                        <a href="{{ url_for('main.my_reports') }}" class="nav-link align-middle px-0">
                             <i class="fs-4 bi-house d-block d-md-none"><img src="{{ url_for('static', filename='images/my_reports.png') }}" alt="Meus Relatórios" width="32" height="32" class="rounded-circle me-2"></i> <span class="ms-1 d-none d-md-inline text-black" style="{{ my_reports_option }}">Meus Relatórios</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ url_for('trash') }}" class="nav-link align-middle px-0">
+                        <a href="{{ url_for('main.trash') }}" class="nav-link align-middle px-0">
                             <i class="fs-4 bi-trash d-block d-md-none"><img src="{{ url_for('static', filename='images/trash.png') }}" alt="Lixeira" width="32" height="32" class="rounded-circle me-2"></i> <span class="ms-1 d-none d-md-inline text-black" style="{{ trash_option }}">Lixeira</span>
                         </a>
                     </li>

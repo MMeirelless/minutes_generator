@@ -1,13 +1,12 @@
 import time
 from openai import OpenAI
-from docx import Document
-from io import BytesIO
 from tempfile import NamedTemporaryFile
 import os
 import re
+from instance.config import Config 
 
 client = OpenAI(
-    api_key="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",
+    api_key=Config.OPEN_AI_API_KEY,
 )
 
 def transcribe_audio(audio_file):

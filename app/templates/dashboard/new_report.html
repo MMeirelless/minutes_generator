@@ -6,7 +6,7 @@
 {% block panel_content %}
 <h2>Novo Relatório</h2>
 <br>
-<form id="audio_upload_form" action="{{ url_for('new_report') }}" method="POST" enctype="multipart/form-data">
+<form id="audio_upload_form" action="{{ url_for('main.new_report') }}" method="POST" enctype="multipart/form-data">
     <input lang="pt-BR" type="file" name="audio_file" accept=".mp3">
     <br><br>
     <input class="input-main btn-generate" type="submit" value="Gerar Relatório">

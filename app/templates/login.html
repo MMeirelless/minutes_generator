@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="form-container">
-    <form action="{{ url_for('login') }}" method="post" class="form-box">
+    <form action="{{ url_for('main.login') }}" method="post" class="form-box">
         <h2>Entrar</h2>
         {{ form.hidden_tag() }}
         <div class="form-group">
@@ -12,7 +12,7 @@
         <div class="form-group">
             {{ form.password.label }} {{ form.password() }}
         </div>
-        <a href="{{ url_for('register') }}">Novo aqui? Cadastre-se!</a>
+        <a href="{{ url_for('main.register') }}">Novo aqui? Cadastre-se!</a>
         <div id="remember" class="form-group">
             {{ form.remember.label }} {{ form.remember() }}
         </div>
