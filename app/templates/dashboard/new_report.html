@@ -5,9 +5,10 @@
 
 {% block panel_content %}
 <h2>Novo Relatório</h2>
+<p class="text-justify">Formatos aceitos: MP3 e MP4.</p>
 <br>
 <form id="audio_upload_form" action="{{ url_for('main.new_report') }}" method="POST" enctype="multipart/form-data">
-    <input lang="pt-BR" type="file" name="audio_file" accept=".mp3">
+    <input lang="pt-BR" type="file" name="audio_file" accept=".mp3,.mp4">
     <br><br>
     <input class="input-main btn-generate" type="submit" value="Gerar Relatório">
     <br><br>

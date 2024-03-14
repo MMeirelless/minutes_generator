@@ -126,3 +126,7 @@ def report_download():
 @main.route("/trash")
 def trash():
     return render_template('dashboard/trash.html')
+
+@main.route("/recording")
+def recording():
+    return render_template("recording.html")

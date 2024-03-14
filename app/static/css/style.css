@@ -31,6 +31,16 @@ li#user_nav_btns {
     background-color: #001a36;
 }
 
+/* Title Font */
+.product-title {
+    font-family: "Indie Flower", cursive;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 25px;
+    color: #ffc108;
+}
+
 /* Login e Register */
 div#remember,
 div#signup {
@@ -84,8 +94,14 @@ div#signup {
     background-color: #cf9c06;
 }
 
+/* Recording Options */
+#options-container {
+    min-height: 40vh;
+}
+
 /* Plans */
-.plans-container {
+.plans-container, 
+.options-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center; 
@@ -95,7 +111,8 @@ div#signup {
     min-height: 80vh;
 }
 
-.plan-box {
+.plan-box, 
+.option-box {
     background-color: #f7f7f7;
     padding: 20px;
     border-radius: 8px;
@@ -123,27 +140,33 @@ div#signup {
     margin: 10px 0; 
 }
 
-.btn-buy, .input-main {
+.btn-buy, .input-main, .btn-default {
+    margin: auto;
+    display: block;
+    width: max-content;
     background-color: #ffc107;
     color: white;
     padding: 10px 15px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    text-decoration: none;
 }
 
-.btn-buy:hover, .input-main:hover {
+.btn-buy:hover, .input-main:hover, .btn-default:hover {
     background-color: #cf9c06;
 }
 
 @media (max-width: 992px) {
+    .option-box,
     .plan-box {
-        width: calc(50% - 20px); 
+        width: auto;
     }
 }
 
 @media (max-width: 768px) {
-    .plan-box {
+    .plan-box
+    .option-box {
         width: 100%; 
     }
 }
