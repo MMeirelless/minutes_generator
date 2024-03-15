@@ -7,6 +7,10 @@ from .models import User, Report
 from .forms import LoginForm, RegistrationForm
 from .services import report_generator, dict_to_html
 from werkzeug.security import generate_password_hash, check_password_hash
+from json import dumps 
+from datetime import datetime
+from hashlib import md5
+from sqlalchemy.exc import IntegrityError
 
 main = Blueprint('main', __name__)
 
@@ -69,9 +73,11 @@ def support():
 def my_account():
     return render_template('dashboard/my_account.html')
 
-@main.route("/my_reports")
+@main.route('/my_reports')
 def my_reports():
-    return render_template('dashboard/my_reports.html')
+    reports = Report.query.filter_by(user_id=current_user.id).all()
+    return render_template('dashboard/my_reports.html', reports=reports)
+
 
 @main.route('/new_report', methods=['GET', 'POST'])
 def new_report():
@@ -122,6 +128,40 @@ def report_download():
         flash('Erro ao baixar o arquivo.', 'danger')
         return redirect(url_for('main.new_report'))
 
+@main.route('/save_report', methods=["POST"])
+def save_report():
+    if request.method == 'POST' and current_user.is_authenticated:
+        report = request.get_json()["htmlReport"]
+        report_id = md5(report.encode()).hexdigest()
+        user_id = current_user.id
+        date = datetime.now()
+        title = f"Report {report_id}"
+
+        try:
+            new_report = Report(report=report, report_id=report_id, user_id=user_id, date=date, title=title)
+            db.session.add(new_report)
+            db.session.commit()
+
+        except IntegrityError:
+            db.session.rollback()
+            flash('Esse relatório já foi salvo.', 'warning')
+        
+        return {"reponse":"report saved"}
+    
+    return render_template('dashboard/new_report.html')
+
+@main.route('/delete_report', methods=["POST"])
+def delete_report():
+    report_id = request.get_json()["report_id"]
+    report_user_id = Report.query.filter_by(report_id=report_id).first().user_id
+    if request.method == "POST" and current_user.is_authenticated and report_user_id == current_user.id:
+        report = Report.query.get(report_id)
+        db.session.delete(report)
+        db.session.commit()
+        flash('Report apagado com sucesso.', 'success')
+        return render_template('dashboard/trash.html')
+
+    return render_template('dashboard/my_reports.html')
 
 @main.route("/trash")
 def trash():

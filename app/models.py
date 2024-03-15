@@ -11,7 +11,7 @@ class User(UserMixin, db.Model):
     reports = db.relationship('Report', backref='author', lazy=True)
 
 class Report(db.Model):
-    report_id = db.Column(db.Integer, primary_key=True)
+    report_id = db.Column(db.String(100), primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     report = db.Column(db.Text, nullable=False)
     date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)

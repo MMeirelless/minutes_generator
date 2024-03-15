@@ -33,9 +33,9 @@ li#user_nav_btns {
 
 /* Title Font */
 .product-title {
-    font-family: "Indie Flower", cursive;
+    font-family: "Urbanist", sans-serif;
     font-optical-sizing: auto;
-    font-weight: 400;
+    font-weight: 100;
     font-style: normal;
     font-size: 25px;
     color: #ffc108;
@@ -461,4 +461,17 @@ ol li, ul li {
 ol, ul {
     margin: 0;
     padding: 0;
+}
+
+/* My Reports */
+.report-list-item {
+    border-radius: 8px;
+    box-shadow: 0 0px 30px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    margin-bottom: 30px;
+}
+
+/* New Report */
+input.input-main.btn-generate {
+    margin: inherit;
 }

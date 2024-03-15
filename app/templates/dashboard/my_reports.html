@@ -1,8 +1,55 @@
-{% set my_reports_option = 'font-weight:700;' %}
 {% extends "dashboard/dashboard_base.html" %}
 
 {% block title %}Meus Relatórios{% endblock %}
 
 {% block panel_content %}
 <h2>Meus Relatórios</h2>
+{% for report in reports %}
+    <div class="report-list-item">
+        <h4>{{ report.title }}</h4>
+        <br>
+        <div class="collapse" id="{{ report.report_id }}">
+            <div class="card-body">
+                {{ report.report|safe }}
+            </div>
+            <br>
+        </div>
+        <div class="reports-btns">
+            <p class="d-inline-flex gap-1">
+                <a class="btn btn-primary" data-bs-toggle="collapse" href="#{{ report.report_id }}" role="button" aria-expanded="false" aria-controls="collapseExample">
+                    Ler Mais
+                </a>
+                <a data-id="{{ report.report_id }}" class="btn btn-danger btn-delete">
+                    Apagar 
+                </a>
+            </p>
+        </div>
+    </div>
+{% endfor %}
+<script>
+    async function deleteReport(request_id) {
+        const response = await fetch("/delete_report", {
+            method: "POST",
+            cache: "no-cache",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            redirect: "follow",
+            referrerPolicy: "no-referrer",
+            body: JSON.stringify({"report_id":request_id}),
+        });
+        return response.json();
+    }
+    
+    var deleteButtons = document.querySelectorAll(".btn-delete");
+
+    deleteButtons.forEach(function(button) {
+        button.addEventListener("click", function(){
+            deleteReport(this.dataset.id)
+            location.href = "/trash";
+        });
+    });
+
+</script>
 {% endblock %}

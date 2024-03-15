@@ -5,9 +5,9 @@
 
 {% block panel_content %}
 <h2>Novo Relatório</h2>
-<p class="text-justify">Formatos aceitos: MP3 e MP4.</p>
 <br>
 <form id="audio_upload_form" action="{{ url_for('main.new_report') }}" method="POST" enctype="multipart/form-data">
+    <p class="text-justify">Formatos aceitos: MP3 e MP4.</p>
     <input lang="pt-BR" type="file" name="audio_file" accept=".mp3,.mp4">
     <br><br>
     <input class="input-main btn-generate" type="submit" value="Gerar Relatório">
@@ -96,8 +96,32 @@
                     cancelButtonText: 'Cancelar'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // Implemente a lógica de salvamento aqui
-                        console.log('Salvar relatório');
+                        var reportClone = document.querySelector('.report').cloneNode(true);
+    
+                        reportClone.querySelectorAll('a').forEach(function(a) {
+                            a.remove();
+                        });
+                        
+                        var reportString = {"htmlReport":reportClone.outerHTML};
+                        
+                        async function saveReport() {
+                            const response = await fetch("/save_report", {
+                                method: "POST",
+                                cache: "no-cache",
+                                credentials: "same-origin",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                redirect: "follow",
+                                referrerPolicy: "no-referrer",
+                                body: JSON.stringify(reportString),
+                            });
+                            return response.json();
+                        }
+
+                        saveReport()
+
+                        document.querySelector(".btn-save").classList.add('btn-disabled')
                     }
                 });
             });
