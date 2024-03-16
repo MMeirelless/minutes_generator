@@ -16,7 +16,10 @@ main = Blueprint('main', __name__)
 
 @main.route('/')
 def home():
-    return render_template('home.html')
+    if current_user.is_authenticated:
+        return redirect(url_for('main.new_report'))
+    else:
+        return render_template('home.html')
 
 @main.route('/login', methods=['GET', 'POST'])
 def login():
@@ -83,6 +86,7 @@ def my_reports():
 def new_report():
     global output
     global doc_title
+    html_content_title = "Novo Relatório"
     html_content = ""
     if request.method == 'POST':
         if 'audio_file' not in request.files:
@@ -101,8 +105,9 @@ def new_report():
             minutes = result[0]
             doc_title = f"{result[1]}.docx"
             download_url = url_for('main.report_download')
+            html_content_title = doc_title.replace("_", " ").split(".")[0]
             html_content = dict_to_html(minutes, download_url)
-            
+
             for key, value in minutes.items():
                 heading = ' '.join(word.capitalize() for word in key.split('_'))
                 doc.add_heading(heading, level=1)
@@ -114,9 +119,9 @@ def new_report():
             output.seek(0)
 
             flash('Relatório gerado com sucesso!', 'success')
-            return render_template('dashboard/new_report.html', html_content=html_content,is_report_generated="true")
+            return render_template('dashboard/new_report.html', html_content=html_content,is_report_generated="true",html_content_title=html_content_title)
         
-    return render_template('dashboard/new_report.html', html_content=html_content,is_report_generated="false")
+    return render_template('dashboard/new_report.html', html_content=html_content,is_report_generated="false",html_content_title=html_content_title)
 
 @main.route('/report_download')
 def report_download():
@@ -131,12 +136,12 @@ def report_download():
 @main.route('/save_report', methods=["POST"])
 def save_report():
     if request.method == 'POST' and current_user.is_authenticated:
-        report = request.get_json()["htmlReport"]
+        report = request.get_json()["html_content"]
         report_id = md5(report.encode()).hexdigest()
         user_id = current_user.id
         date = datetime.now()
-        title = f"Report {report_id}"
-
+        title = request.get_json()["html_content_title"]
+        
         try:
             new_report = Report(report=report, report_id=report_id, user_id=user_id, date=date, title=title)
             db.session.add(new_report)

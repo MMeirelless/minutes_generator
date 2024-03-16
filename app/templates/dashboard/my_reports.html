@@ -1,31 +1,37 @@
+{% set my_reports_option = 'font-weight:700;' %}
 {% extends "dashboard/dashboard_base.html" %}
 
 {% block title %}Meus Relatórios{% endblock %}
 
 {% block panel_content %}
 <h2>Meus Relatórios</h2>
-{% for report in reports %}
-    <div class="report-list-item">
-        <h4>{{ report.title }}</h4>
-        <br>
-        <div class="collapse" id="{{ report.report_id }}">
-            <div class="card-body">
-                {{ report.report|safe }}
-            </div>
+{% if reports==[]: %}
+<p>Que página vazia 🧐 Que tal gerar uns <a href="/new_report">relatórios</a>? 👀</p>
+{% else %}
+    {% for report in reports %}
+        <div class="report-list-item">
+            <h4>{{ report.title }}</h4>
             <br>
+            <div class="collapse" id="{{ report.report_id }}">
+                <div class="card-body">
+                    {{ report.report|safe }}
+                </div>
+                <br>
+            </div>
+            <div class="reports-btns">
+                <p class="d-inline-flex gap-1">
+                    <a class="btn btn-primary" data-bs-toggle="collapse" href="#{{ report.report_id }}" role="button" aria-expanded="false" aria-controls="collapseExample">
+                        Ler Mais
+                    </a>
+                    <a data-id="{{ report.report_id }}" class="btn btn-danger btn-delete">
+                        Apagar 
+                    </a>
+                </p>
+            </div>
         </div>
-        <div class="reports-btns">
-            <p class="d-inline-flex gap-1">
-                <a class="btn btn-primary" data-bs-toggle="collapse" href="#{{ report.report_id }}" role="button" aria-expanded="false" aria-controls="collapseExample">
-                    Ler Mais
-                </a>
-                <a data-id="{{ report.report_id }}" class="btn btn-danger btn-delete">
-                    Apagar 
-                </a>
-            </p>
-        </div>
-    </div>
-{% endfor %}
+    {% endfor %}
+{% endif %}
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     async function deleteReport(request_id) {
         const response = await fetch("/delete_report", {
@@ -41,15 +47,30 @@
         });
         return response.json();
     }
-    
-    var deleteButtons = document.querySelectorAll(".btn-delete");
+    document.addEventListener("DOMContentLoaded", function(){
+        const deleteButton = document.querySelectorAll(".btn-delete")
 
-    deleteButtons.forEach(function(button) {
-        button.addEventListener("click", function(){
-            deleteReport(this.dataset.id)
-            location.href = "/trash";
-        });
-    });
-
+        if(deleteButton){
+            deleteButton.forEach(function(button){
+                button.addEventListener("click", function(){
+                    Swal.fire({
+                    title: 'Apagar Relatório?',
+                    text: 'Seu relatório será movido para a lixeira e permanecerá em nosso Banco de Dados por 7 dias. Tem certeza que deseja executar essa ação?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Prosseguir',
+                    cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            deleteReport(this.dataset.id)
+                            location.href = "/trash";
+                        }
+                    });
+                })
+            })
+        }
+    })
 </script>
 {% endblock %}

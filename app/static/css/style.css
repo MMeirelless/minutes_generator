@@ -189,6 +189,11 @@ span.ms-1.d-none.d-sm-inline {
     width: max-content;
 }
 
+.sidebar-item:hover {
+    color: #ffc107 !important;
+    
+}
+
 #audio_upload_form {
     display: grid;
 }

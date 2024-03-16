@@ -4,7 +4,7 @@
 {% block title %}Novo Relatório{% endblock %}
 
 {% block panel_content %}
-<h2>Novo Relatório</h2>
+<h2>{{ html_content_title | safe }}</h2>
 <br>
 <form id="audio_upload_form" action="{{ url_for('main.new_report') }}" method="POST" enctype="multipart/form-data">
     <p class="text-justify">Formatos aceitos: MP3 e MP4.</p>
@@ -23,6 +23,9 @@
 </div>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    var html_content_title = {{ html_content_title|tojson|safe }};
+    var is_report_generated = {{ is_report_generated }};
+
     document.addEventListener('DOMContentLoaded', function() {
         const downloadButton = document.querySelector('.btn-download');
         const newReportButton = document.querySelector('.btn-new');
@@ -31,7 +34,7 @@
         const generateForm = document.querySelector("#audio_upload_form");
         const reportLoader = document.querySelector(".report-loader");
 
-        if ({{ is_report_generated | safe }}) {
+        if (is_report_generated) {
             generateForm.style.display = "none"
         }
 
@@ -101,8 +104,8 @@
                         reportClone.querySelectorAll('a').forEach(function(a) {
                             a.remove();
                         });
-                        
-                        var reportString = {"htmlReport":reportClone.outerHTML};
+
+                        var reportString = {"html_content":reportClone.outerHTML,"html_content_title":html_content_title};
                         
                         async function saveReport() {
                             const response = await fetch("/save_report", {

@@ -1,6 +1,8 @@
-{% extends "base.html" %}
+{% set my_account_option = 'font-weight:700;' %}
+{% extends "dashboard/dashboard_base.html" %}
+
 {% block title %}Minha Conta{% endblock %}
 
-{% block content %}
-
+{% block panel_content %}
+<h2>Olá, {{ current_user.username }}!</h2>
 {% endblock %}
