@@ -6,11 +6,13 @@
 {% block panel_content %}
 <h2>Meus Relatórios</h2>
 {% if reports==[]: %}
-<p>Que página vazia 🧐 Que tal gerar uns <a href="/new_report">relatórios</a>? 👀</p>
+<p>Que página vazia... <br>Que tal gerar um <a href="/new_report">relatório</a>?</p>
 {% else %}
     {% for report in reports %}
         <div class="report-list-item">
             <h4>{{ report.title }}</h4>
+            Relatório gerado em: {{ report.date|safe }}
+            <br>
             <br>
             <div class="collapse" id="{{ report.report_id }}">
                 <div class="card-body">
@@ -20,8 +22,8 @@
             </div>
             <div class="reports-btns">
                 <p class="d-inline-flex gap-1">
-                    <a class="btn btn-primary" data-bs-toggle="collapse" href="#{{ report.report_id }}" role="button" aria-expanded="false" aria-controls="collapseExample">
-                        Ler Mais
+                    <a class="btn btn-primary btn-default" data-bs-toggle="collapse" href="#{{ report.report_id }}" role="button" aria-expanded="false" aria-controls="collapseExample">
+                        Ler mais
                     </a>
                     <a data-id="{{ report.report_id }}" class="btn btn-danger btn-delete">
                         Apagar 
