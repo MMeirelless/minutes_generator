@@ -16,3 +16,10 @@ class Report(db.Model):
     report = db.Column(db.Text, nullable=False)
     date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     title = db.Column(db.String(100), nullable=False)
+
+class Trash(db.Model):
+    report_id = db.Column(db.String(100), primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    report = db.Column(db.Text, nullable=False)
+    date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    title = db.Column(db.String(100), nullable=False)

@@ -1,14 +1,15 @@
 from io import BytesIO
+import time
 from docx import Document
 from flask import Blueprint, render_template, redirect, url_for, request, flash, send_file
 from flask_login import login_user, logout_user, login_required, current_user
 from . import db
-from .models import User, Report
+from .models import User, Report, Trash
 from .forms import LoginForm, RegistrationForm
 from .services import report_generator, dict_to_html
 from werkzeug.security import generate_password_hash, check_password_hash
 from json import dumps 
-from datetime import datetime
+from datetime import datetime, timedelta
 from hashlib import md5
 from sqlalchemy.exc import IntegrityError
 
@@ -88,6 +89,15 @@ def new_report():
     global doc_title
     html_content_title = "Novo Relatório"
     html_content = ""
+
+    # Cleaning Trash
+    user_trashes = Trash.query.filter_by(user_id=current_user.id).all()
+    for trash in user_trashes:
+        if trash.date < datetime.now()-timedelta(days=7):
+            print(datetime.now()-trash.date)
+            db.session.delete(trash)
+            db.session.commit()
+    
     if request.method == 'POST':
         if 'audio_file' not in request.files:
             flash('Por favor, selecione um arquivo.', 'danger')
@@ -137,7 +147,7 @@ def report_download():
 def save_report():
     if request.method == 'POST' and current_user.is_authenticated:
         report = request.get_json()["html_content"]
-        report_id = md5(report.encode()).hexdigest()
+        report_id = md5(f"{report}{datetime.now()}".encode()).hexdigest()
         user_id = current_user.id
         date = datetime.now()
         title = request.get_json()["html_content_title"]
@@ -158,19 +168,39 @@ def save_report():
 @main.route('/delete_report', methods=["POST"])
 def delete_report():
     report_id = request.get_json()["report_id"]
+    selected_report = Report.query.get(report_id)
     report_user_id = Report.query.filter_by(report_id=report_id).first().user_id
     if request.method == "POST" and current_user.is_authenticated and report_user_id == current_user.id:
-        report = Report.query.get(report_id)
-        db.session.delete(report)
+        # Moving to Trash        
+        new_trash = Trash(report=selected_report.report, report_id=md5(f"{selected_report.report}{datetime.now()}".encode()).hexdigest(), user_id=selected_report.user_id, date=datetime.now(), title=selected_report.title)
+        db.session.add(new_trash)
+
+        # Deleting
+        db.session.delete(selected_report)
         db.session.commit()
+
         flash('Report apagado com sucesso.', 'success')
-        return render_template('dashboard/trash.html')
+        return {"reponse":"report saved"}
 
     return render_template('dashboard/my_reports.html')
 
+@main.route('/delete_trash', methods=["POST"])
+def delete_trash():
+    trash_id = request.get_json()["report_id"]
+    selected_trash = Trash.query.get(trash_id)
+    trash_user_id = selected_trash.user_id
+    if request.method == "POST" and current_user.is_authenticated and trash_user_id == current_user.id:
+        db.session.delete(selected_trash)
+        db.session.commit()
+        flash('Report apagado com sucesso.', 'success')
+        return {"reponse":"report saved"}
+
+    return render_template('dashboard/trash.html')
+
 @main.route("/trash")
 def trash():
-    return render_template('dashboard/trash.html')
+    user_trash = Trash.query.filter_by(user_id=current_user.id).all()
+    return render_template('dashboard/trash.html', user_trash=user_trash)
 
 @main.route("/recording")
 def recording():
