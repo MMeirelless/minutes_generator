@@ -1,3 +1,4 @@
+{% set current_page = 'trash' %}
 {% set trash_option = 'font-weight:700;' %}
 {% extends "dashboard/dashboard_base.html" %}
 
@@ -33,46 +34,4 @@
         </div>
     {% endfor %}
 {% endif %}
-<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    async function deleteTrash(report_id) {
-        const response = await fetch("/delete_trash", {
-            method: "POST",
-            cache: "no-cache",
-            credentials: "same-origin",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            redirect: "follow",
-            referrerPolicy: "no-referrer",
-            body: JSON.stringify({"report_id":report_id}),
-        });
-        return response.json();
-    }
-    document.addEventListener("DOMContentLoaded", function(){
-        const deleteButton = document.querySelectorAll(".btn-delete")
-
-        if(deleteButton){
-            deleteButton.forEach(function(button){
-                button.addEventListener("click", function(){
-                    Swal.fire({
-                    title: 'Apagar Relatório?',
-                    text: 'Seu relatório será movido para a lixeira e permanecerá em nosso Banco de Dados por 7 dias. Tem certeza que deseja executar essa ação?',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Prosseguir',
-                    cancelButtonText: 'Cancelar'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            deleteTrash(this.dataset.id)
-                            location.href = "/new_report";
-                        }
-                    });
-                })
-            })
-        }
-    })
-</script>
 {% endblock %}

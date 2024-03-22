@@ -1,3 +1,4 @@
+{% set current_page = 'new_report' %}
 {% set new_report_option = 'font-weight:700;' %}
 {% extends "dashboard/dashboard_base.html" %}
 
@@ -22,114 +23,8 @@
 <div class="report">
     {{ html_content | safe }}
 </div>
-<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     var html_content_title = {{ html_content_title|tojson|safe }};
     var is_report_generated = {{ is_report_generated }};
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const downloadButton = document.querySelector('.btn-download');
-        const newReportButton = document.querySelector('.btn-new');
-        const saveButton = document.querySelector('.btn-save');
-        const generateButton = document.querySelector(".btn-generate");
-        const generateForm = document.querySelector("#audio_upload_form");
-        const reportLoader = document.querySelector(".report-loader");
-
-        if (is_report_generated) {
-            generateForm.style.display = "none"
-        }
-
-        if(generateButton) {
-            generateButton.addEventListener('click', function() {
-                generateForm.style.display = "none"
-                reportLoader.style.display = "block"
-            })
-        }
-
-        if (downloadButton) {
-        downloadButton.addEventListener('click', function() {
-            
-            this.classList.add('btn-disabled');
-            
-            Swal.fire({
-                title: 'Download iniciado!',
-                text: 'Seu download foi iniciado. Por favor, verifique sua pasta de downloads.',
-                icon: 'success',
-                confirmButtonColor: '#3085d6',
-                confirmButtonText: 'OK',
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    
-                }
-            });
-        });
-    }
-    
-        if (newReportButton) {
-            newReportButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                Swal.fire({
-                    title: 'Tem certeza?',
-                    text: "Você está prestes a criar um novo relatório. Certifique-se de ter salvo ou baixado o relatório atual. O relatório atual será apagado.",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Prosseguir',
-                    cancelButtonText: 'Cancelar'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = '/new_report';
-                    }
-                });
-            });
-        }
-    
-        // Salvar Relatório
-        if (saveButton) {
-            saveButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                Swal.fire({
-                    title: 'Você deseja salvar o relatório?',
-                    text: "Não recomendamos salvar informações sensíveis.",
-                    icon: 'info',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Salvar',
-                    cancelButtonText: 'Cancelar'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        var reportClone = document.querySelector('.report').cloneNode(true);
-    
-                        reportClone.querySelectorAll('a').forEach(function(a) {
-                            a.remove();
-                        });
-
-                        var reportString = {"html_content":reportClone.outerHTML,"html_content_title":html_content_title};
-                        
-                        async function saveReport() {
-                            const response = await fetch("/save_report", {
-                                method: "POST",
-                                cache: "no-cache",
-                                credentials: "same-origin",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                },
-                                redirect: "follow",
-                                referrerPolicy: "no-referrer",
-                                body: JSON.stringify(reportString),
-                            });
-                            return response.json();
-                        }
-
-                        saveReport()
-
-                        document.querySelector(".btn-save").classList.add('btn-disabled')
-                    }
-                });
-            });
-        }
-    });
-</script>    
+</script>
 {% endblock %}
