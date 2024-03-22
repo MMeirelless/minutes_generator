@@ -2,8 +2,8 @@
 {% block content %}
 <div class="dashboard-container container-fluid">
     <div class="row">
-        <div class="dashboard-sidebar col-2">
-            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+        <div class="dashboard-sidebar d-none d-md-block col-md-2">
+            <div class="desktop-navbar d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
                 <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
                     <li class="nav-item">
                         <a href="{{ url_for('main.new_report') }}" class="nav-link align-middle px-0">
@@ -27,8 +27,19 @@
                     </li>
                 </ul>
             </div>
-        </div>        
-        <div class="col-9">
+        </div>
+
+        <nav class="mobile-header d-block d-md-none">
+            <ul class="nav justify-content-around">
+                <a href="{{ url_for('main.new_report') }}"><img src="{{ url_for('static', filename='images/new_report.png') }}" alt="Novo Relatório" width="32" height="32"></a>
+                <a href="{{ url_for('main.my_reports') }}"><img src="{{ url_for('static', filename='images/my_reports.png') }}" alt="Meus Relatórios" width="32" height="32"></a>
+                <a href="{{ url_for('main.trash') }}"><img src="{{ url_for('static', filename='images/trash.png') }}" alt="Lixeira" width="32" height="32"></a>
+                <a href="{{ url_for('main.my_account') }}"><img src="{{ url_for('static', filename='images/user.png') }}" alt="Minha Conta" width="32" height="32"></a>
+            </ul>
+        </nav>
+
+        <div class="dashboard col">
+            {% block profile_header %}{% endblock %}
             <div class="dashboard-content">
                 {% block panel_content %}{% endblock %}
             </div>

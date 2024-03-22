@@ -69,10 +69,6 @@ def logout():
 def plans():
     return render_template('plans.html')
 
-@main.route("/support")
-def support():
-    return render_template('support.html')
-
 @main.route("/my_account")
 def my_account():
     return render_template('dashboard/my_account.html')
