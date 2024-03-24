@@ -55,7 +55,7 @@ div#signup {
 
 .form-box {
     background-color: #f7f7f7;
-    padding: 40px;
+    padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 100%;
@@ -93,6 +93,39 @@ div#signup {
 .form-group input[type="submit"]:hover {
     background-color: #cf9c06;
 }
+
+div#user-pic {
+    display: grid;
+    width: 100%;
+}
+
+.user-pic-form-item {
+    margin: auto;
+    font-size: 14px;
+    margin-top: 10px;
+    cursor: pointer;;
+}
+
+.user-pic-options {
+    border: 2px solid transparent;
+}
+
+.user-pic-options-modal-body {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around; /* Distribui o espaço igualmente */
+    gap: 10px; /* Espaçamento entre as fotos */
+}
+
+.user-pic-options {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.user-pic-options:hover {
+    transform: scale(1.1); /* Efeito de zoom ao passar o mouse */
+}
+
 
 /* Recording Options */
 #options-container {
@@ -190,6 +223,11 @@ span.ms-1.d-none.d-sm-inline {
     width: 100%;
     background-color: #f8f9fa;
     padding: 10px 0;
+
+    z-index: 1000;
+    position: fixed;
+    bottom: 0;
+    left: 0;
 }
 
 .sidebar-item:hover {

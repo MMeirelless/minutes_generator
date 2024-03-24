@@ -28,7 +28,12 @@
                 </ul>
             </div>
         </div>
-
+        <div class="dashboard col">
+            {% block profile_header %}{% endblock %}
+            <div class="dashboard-content">
+                {% block panel_content %}{% endblock %}
+            </div>
+        </div>
         <nav class="mobile-header d-block d-md-none">
             <ul class="nav justify-content-around">
                 <a href="{{ url_for('main.new_report') }}"><img src="{{ url_for('static', filename='images/new_report.png') }}" alt="Novo Relatório" width="32" height="32"></a>
@@ -37,13 +42,6 @@
                 <a href="{{ url_for('main.my_account') }}"><img src="{{ url_for('static', filename='images/user.png') }}" alt="Minha Conta" width="32" height="32"></a>
             </ul>
         </nav>
-
-        <div class="dashboard col">
-            {% block profile_header %}{% endblock %}
-            <div class="dashboard-content">
-                {% block panel_content %}{% endblock %}
-            </div>
-        </div>
     </div>
 </div>
 {% endblock %}

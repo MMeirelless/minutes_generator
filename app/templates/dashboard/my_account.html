@@ -9,7 +9,7 @@
     <div class="card">
         <div class="card-img-top"></div>
         <div class="card-body little-profile text-center">
-            <div class="pro-img"><img src="{{ url_for('static', filename='images/user.png') }}" alt="user"></div>
+            <div class="pro-img"><img src="{{ url_for('static', filename='images/user_pictures/'+current_user.user_pic) }}" alt="user"></div>
             <h3 class="m-b-0">{{ current_user.username}} | {{ current_user.plan }}</h3>
             <div class="account-info">
                 <p>{{ current_user.email }}</p>

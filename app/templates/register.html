@@ -8,6 +8,27 @@
         <h2>Cadastrar</h2>
         {{ form.hidden_tag() }}
         <div class="form-group">
+            <div id="user-pic">
+                <img class="user-pic-form-item" style="border-radius: 100%" height="80px" src="{{ url_for('static', filename='images/user.png') }}" alt="user" id="selectedImagePreview">
+                <p class="user-pic-form-item">Trocar Foto</p> 
+            </div>
+
+            <div class="modal" id="picModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Escolher Foto de Perfil</h5>
+                        </div>
+                        <div class="modal-body user-pic-options-modal-body">
+                            {% for i in range(1, 7) %}
+                            <img style="border-radius: 100%" height="120px" class="user-pic-options" src="{{ url_for('static', filename='images/user_pictures/user' ~ i ~ '.webp') }}" alt="user{{i}}" class="pic-option" onclick="selectPic('user{{ i }}.webp', this)">
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
             {{ form.username.label }} {{ form.username() }}
         </div>
         <div class="form-group">
@@ -28,4 +49,12 @@
         </div>
     </form>
 </div>
+<script>
+    function selectPic(picName, element) {
+        document.getElementById('selectedImagePreview').src = "{{ url_for('static', filename='images/user_pictures/') }}" + picName;
+        document.getElementById('user_pic').value = picName;
+        $('#picModal').modal('hide');
+    }
+</script>
+    
 {% endblock %}

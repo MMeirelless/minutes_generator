@@ -1,6 +1,7 @@
 from . import db
 from flask_login import UserMixin
 from datetime import datetime
+from random import randint
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -8,6 +9,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
     plan = db.Column(db.String(20), nullable=False, default='Grátis')
+    user_pic = db.Column(db.String(250), nullable=False, default=f"/static/images/user_pictures/user{randint(1, 6)}.webp")
     reports = db.relationship('Report', backref='author', lazy=True)
 
 class Report(db.Model):

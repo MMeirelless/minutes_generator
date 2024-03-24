@@ -223,4 +223,25 @@ document.addEventListener("DOMContentLoaded", function(){
             })
         }
     }
+
+    if (document.getElementById("register")){
+        function openPicModal() {
+            $('#picModal').modal('show');
+        }
+        
+        function selectPic(picName, element) {
+            if (picName !== '') {
+                document.getElementById('selectedImagePreview').src = "{{ url_for('static', filename='images/user_pictures/') }}" + picName;
+                document.getElementById('selectedPic').value = picName;
+                $('#picModal').modal('hide');
+            }
+        }
+
+        document.querySelector("#user-pic").addEventListener("click", function(){
+            openPicModal()
+        })
+        document.querySelector("#user-pic").addEventListener("click", function(){
+            openPicModal()
+        })
+    }
 })

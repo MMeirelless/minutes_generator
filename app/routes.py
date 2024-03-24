@@ -51,7 +51,7 @@ def register():
             return redirect(url_for('main.register'))
         
         hashed_password = generate_password_hash(form.password.data)
-        user = User(username=form.username.data, email=form.email.data, password=hashed_password, plan=form.plan.data)
+        user = User(username=form.username.data, email=form.email.data, password=hashed_password, plan=form.plan.data, user_pic=form.user_pic.data)
         db.session.add(user)
         db.session.commit()
         flash('Sua conta foi criada! Bem vindo!', 'success')
