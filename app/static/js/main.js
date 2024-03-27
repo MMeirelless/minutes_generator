@@ -37,6 +37,55 @@ document.addEventListener("DOMContentLoaded", function(){
         document.getElementById('deleteAccountBtn').addEventListener('click', function(){
             deleteAccount()
         })
+
+        // License Time Chart
+        var ctx = document.getElementById('licencaUsageChart').getContext('2d');
+        var licencaUsageChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho'],
+                datasets: [{
+                    label: 'Minutos Utilizados',
+                    data: [50, 75, 150, 100, 200, 175],
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    datalabels: {
+                        align: 'end',
+                        anchor: 'end',
+                        backgroundColor: function(context) {
+                            return context.dataset.borderColor;
+                        },
+                        borderRadius: 4,
+                        color: 'white',
+                        formatter: Math.round
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]
+        });
+
+        // Recomendation
+        var totalUsage = licencaUsageChart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+        var averageUsage = totalUsage / licencaUsageChart.data.datasets[0].data.length;
+        var recommendation = document.getElementById('licencaRecommendation');
+
+        if (averageUsage > 180) {
+            recommendation.innerText = 'Recomendamos contratar um plano melhor devido ao alto consumo.';
+        } else if (averageUsage < 100) {
+            recommendation.innerText = 'Seu consumo atual está baixo, talvez um plano mais simples atenda suas necessidades.';
+        } else {
+            recommendation.innerText = 'Seu plano atual parece adequado ao seu consumo.';
+        }
     }
     // My Reports
     if (document.getElementById("my_reports")){

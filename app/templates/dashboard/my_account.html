@@ -5,6 +5,9 @@
 {% block title %}Minha Conta{% endblock %}
 
 {% block profile_header %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+
 <section class="user-data mt-4">
     <div class="card">
         <div class="card-img-top"></div>
@@ -87,12 +90,16 @@
                 <button class="btn btn-secondary dengerous-btns">Cancelar Plano</button>
             </div>
         </div>
-        <div class="metrics col">
-            <h3>Métricas do Perfil</h3>
-            <p><strong>Relatórios Gerados</strong>: 10</p>
-            <p><strong>Relatórios Armazenados</strong>: 5</p>
-            <p><strong>Licença</strong>: 120 min / 300 min</p>
-        </div>
+    </div>
+    <hr>
+    <div class="metrics col">
+        <h3>Métricas do Perfil</h3>
+        <p>Fique por dentro de como está o consumo da sua licença.</p>
+        <p><strong>Relatórios Gerados</strong>: 10 | <strong>Relatórios Armazenados</strong>: 5 | <strong>Licença (Atual)</strong>: 120 min / 300 min</p>
+        <div class="licenca-usage-chart">
+            <canvas id="licencaUsageChart"></canvas>
+            <p id="licencaRecommendation"></p>
+        </div>        
     </div>
 </section>
 <hr>
@@ -138,28 +145,28 @@
         <ul class="list-group">
             <li class="list-group-item d-flex justify-content-between align-items-center">
               Termos & Políticas
-              <a href="#" class="badge bg-primary rounded-pill">Download</a>
+              <a href="#" class="badge bg-primary rounded-pill">Acessar</a>
             </li>
             <li class="list-group-item d-flex justify-content-between align-items-center">
               Política de Privacidade
-              <a href="#" class="badge bg-primary rounded-pill">Download</a>
+              <a href="#" class="badge bg-primary rounded-pill">Acessar</a>
             </li>
             <li class="list-group-item d-flex justify-content-between align-items-center">
               Guia de Segurança
-              <a href="#" class="badge bg-primary rounded-pill">Download</a>
+              <a href="#" class="badge bg-primary rounded-pill">Acessar</a>
             </li>
             <li class="list-group-item d-flex justify-content-between align-items-center">
               FAQ ou Ajuda
-              <a href="#" class="badge bg-primary rounded-pill">Download</a>
+              <a href="#" class="badge bg-primary rounded-pill">Acessar</a>
             </li>
             <li class="list-group-item d-flex justify-content-between align-items-center">
               Termos de Uso
-              <a href="#" class="badge bg-primary rounded-pill">Download</a>
+              <a href="#" class="badge bg-primary rounded-pill">Acessar</a>
             </li>
         </ul>
         <br>
         <div class="buttons-container">
-            <button class="btn btn-default">Ativar verificação de dois fatores</button>
+            <button class="btn btn-default">Verificação de dois fatores</button>
             <button class="btn btn-secondary dengerous-btns" id="deleteAccountBtn">Deletar Conta</button>
         </div>
     </div>
