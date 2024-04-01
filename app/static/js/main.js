@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function(){ 
     // My Account
     if (document.getElementById("my_account")){
-        function deleteAccount() {
+        async function deleteAccount() {
             Swal.fire({
                 title: 'Tem certeza?',
                 text: "Você não poderá reverter isso!",
@@ -12,12 +12,29 @@ document.addEventListener("DOMContentLoaded", function(){
                 confirmButtonText: 'Sim, deletar!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Aqui, coloque o código para chamar a rota de deleção da conta.
+                    var payload = {};
+
+                    const response = fetch("/delete_account", {
+                        method: "POST",
+                        cache: "no-cache",
+                        credentials: "same-origin",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        redirect: "follow",
+                        referrerPolicy: "no-referrer",
+                        body: JSON.stringify(payload),
+                    });
                     Swal.fire(
                         'Deletado!',
                         'Sua conta foi deletada.',
                         'success'
-                    )
+                    ).then((result) => {
+                        if (result.isConfirmed) {
+                            location.href="/logout"
+                            return response.json();
+                        }
+                    })
                 }
             })
         }
@@ -207,7 +224,7 @@ document.addEventListener("DOMContentLoaded", function(){
                             a.remove();
                         });
 
-                        var reportString = {"html_content":reportClone.outerHTML,"html_content_title":html_content_title};
+                        var payload = {"html_content":reportClone.outerHTML,"html_content_title":html_content_title};
                         
                         async function saveReport() {
                             const response = await fetch("/save_report", {
@@ -219,7 +236,7 @@ document.addEventListener("DOMContentLoaded", function(){
                                 },
                                 redirect: "follow",
                                 referrerPolicy: "no-referrer",
-                                body: JSON.stringify(reportString),
+                                body: JSON.stringify(payload),
                             });
                             return response.json();
                         }

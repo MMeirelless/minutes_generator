@@ -12,6 +12,7 @@ from json import dumps
 from datetime import datetime, timedelta
 from hashlib import md5
 from sqlalchemy.exc import IntegrityError
+from random import randint
 
 main = Blueprint('main', __name__)
 
@@ -51,7 +52,7 @@ def register():
             return redirect(url_for('main.register'))
         
         hashed_password = generate_password_hash(form.password.data)
-        user = User(username=form.username.data, email=form.email.data, password=hashed_password, plan=form.plan.data, user_pic=form.user_pic.data)
+        user = User(username=form.username.data, email=form.email.data, password=hashed_password, plan=form.plan.data, user_pic=form.user_pic.data if form.user_pic.data != "" else f"user{randint(1, 6)}.webp")
         db.session.add(user)
         db.session.commit()
         flash('Sua conta foi criada! Bem vindo!', 'success')
@@ -175,10 +176,33 @@ def delete_report():
         db.session.delete(selected_report)
         db.session.commit()
 
-        flash('Report apagado com sucesso.', 'success')
         return {"reponse":"report saved"}
 
     return render_template('dashboard/my_reports.html')
+
+@main.route('/delete_account', methods=["POST"])
+def delete_account():
+    if request.method == "POST" and current_user.is_authenticated:
+        
+        reports = Report.query.filter_by(user_id=current_user.id).all()
+        for report in reports:
+            db.session.delete(report)
+        
+        trashes = Trash.query.filter_by(user_id=current_user.id).all()
+        for trash in trashes:
+            db.session.delete(trash)
+        
+        user = User.query.get_or_404(current_user.id)
+        db.session.delete(user)
+            
+        db.session.commit()
+
+        logout_user()
+        flash('Conta apagada com sucesso.', 'success')
+
+        return redirect(url_for('main.home'))
+
+    return redirect(url_for('my_account'))
 
 @main.route('/delete_trash', methods=["POST"])
 def delete_trash():
