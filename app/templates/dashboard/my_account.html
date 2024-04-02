@@ -32,22 +32,19 @@
                     <form>
                         <div class="mb-3">
                             <label for="username" class="form-label">Nome</label>
-                            <input type="text" class="form-control" id="username" value="{{ current_user.username }}">
+                            <input type="text" class="form-control" id="username" maxlength="20" minlength="2" value="{{ current_user.username }}">
                         </div>
                         <div class="mb-3">
                             <label for="useremail" class="form-label">Email</label>
                             <input type="email" class="form-control" id="useremail" value="{{ current_user.email }}">
                         </div>
-                    </form>
-                </div>
-                <hr>
-                <div class="modal-body">
-                    <h5 class="modal-title">Trocar Senha</h5>
-                    <form method="POST" action="/change_password">
-                        <div class="password-change-container">
-                            <input type="password" name="current_password" class="change_password_item" placeholder="Senha Atual" required>
-                            <input type="password" name="new_password" class="change_password_item" placeholder="Nova Senha" required>
-                            <button type="submit" class="btn btn-primary change_password_item">Trocar Senha</button>
+                        <div class="mb-3">
+                            <label for="pwd_old" class="form-label">Senha Atual</label>
+                            <input type="password" class="form-control" id="pwd_old">
+                        </div>
+                        <div class="mb-3">
+                            <label for="pwd_new" class="form-label">Nova Senha</label>
+                            <input type="password" class="form-control" id="pwd_new">
                         </div>
                     </form>
                 </div>

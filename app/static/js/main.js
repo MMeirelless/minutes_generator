@@ -38,12 +38,34 @@ document.addEventListener("DOMContentLoaded", function(){
                 }
             })
         }
-        function saveAccount() {
+        async function saveAccount() {
             var formData = {
-                username: document.getElementById('username').value,
-                email: document.getElementById('useremail').value
+                "username": document.getElementById('username').value,
+                "email": document.getElementById('useremail').value,
+                "pwd_old": document.getElementById('pwd_old').value,
+                "pwd_new": document.getElementById('pwd_new').value
             };
-            console.log(formData);
+            
+            fetch("/update_account", {
+                method: "POST",
+                cache: "no-cache",
+                credentials: "same-origin",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                redirect: "follow",
+                referrerPolicy: "no-referrer",
+                body: JSON.stringify(formData),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data["response"]=="success"){
+                    location.href = "/my_account"
+                }
+                else{
+                    
+                }
+            })
         }
         document.getElementById('closeModal').addEventListener('click', function() {
             document.querySelector('#editProfileModal .modal-body form').reset();

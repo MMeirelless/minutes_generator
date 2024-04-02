@@ -206,7 +206,7 @@ def save_report():
             db.session.rollback()
             flash('Esse relatório já foi salvo.', 'warning')
         
-        return {"reponse":"report saved"}
+        return {"response":"report saved"}
     
     else:
         return redirect(url_for('main.home'))
@@ -225,7 +225,7 @@ def delete_report():
         db.session.delete(selected_report)
         db.session.commit()
 
-        return {"reponse":"report saved"}
+        return {"response":"report deleted"}
     
     else:
         return redirect(url_for('main.home'))
@@ -254,6 +254,39 @@ def delete_account():
     else:
         return redirect(url_for('main.home'))
 
+@main.route('/update_account', methods=["POST"])
+def update_account():
+    if request.method == "POST" and current_user.is_authenticated:
+        
+        data = request.get_json()
+
+        username = data["username"]
+        email = data["email"]
+
+        is_updating_user = current_user.username != username
+        is_updating_email = current_user.email != email
+
+        if is_updating_user:
+            current_user.username = username
+            try:
+                db.session.commit()
+
+            except IntegrityError:
+                db.session.rollback()
+            
+        if is_updating_email:
+            print(f"Old Email: {current_user.email}\nNew Username: {email}")
+
+        else:
+            pass
+
+        # pensar em lógica para atualizar senha
+
+        flash('Conta atualizada com sucesso.', 'success')
+        return {"response":"success"}
+    else:
+        return {"response":"access denied or error"}
+
 @main.route('/delete_trash', methods=["POST"])
 def delete_trash():
     if request.method == "POST" and current_user.is_authenticated and trash_user_id == current_user.id:
@@ -263,7 +296,7 @@ def delete_trash():
         db.session.delete(selected_trash)
         db.session.commit()
         flash('Report apagado com sucesso.', 'success')
-        return {"reponse":"report saved"}
+        return {"response":"report saved"}
     
     else:
         return redirect(url_for('main.home'))
