@@ -4,6 +4,8 @@ from tempfile import NamedTemporaryFile
 import os
 import re
 from instance.config import Config 
+from flask_mail import Message
+from app import mail
 
 client = OpenAI(
     api_key=Config.OPEN_AI_API_KEY,
@@ -177,3 +179,8 @@ def report_generator(audio_file):
         message = {"status":"exception","message":e}
 
         return message
+    
+def send_verification_email(email, code):
+    msg = Message('Código de Verificação de E-mail', sender=Config.EMAIL, recipients=[email])
+    msg.body = f'Seu código de verificação é: {code}'
+    mail.send(msg)
