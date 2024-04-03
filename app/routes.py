@@ -15,6 +15,8 @@ from random import randint, choices
 from string import digits
 
 main = Blueprint('main', __name__)
+update_account_verification_code = "0"
+code_is_sent = False
 
 @main.route('/')
 def home():
@@ -256,6 +258,9 @@ def delete_account():
 
 @main.route('/update_account', methods=["POST"])
 def update_account():
+    global update_account_verification_code
+    global code_is_sent
+
     if request.method == "POST" and current_user.is_authenticated:
         
         data = request.get_json()
@@ -263,9 +268,12 @@ def update_account():
         username = data["username"]
         pwd_old = data["pwd_old"]
         pwd_new = data["pwd_new"]
+        email = data["email"]
+        code = data["code"]
 
         is_updating_user = current_user.username != username
         is_updating_password = pwd_old!=pwd_new
+        is_updating_email = email!=current_user.email
 
         if is_updating_user:
             current_user.username = username
@@ -286,6 +294,26 @@ def update_account():
                     return {"response": "error"}
             else:
                 return {"response":"wrong_pwd"} 
+        
+        if is_updating_email:
+            print(code_is_sent)
+            print(update_account_verification_code)
+            print(code)
+            if code_is_sent:
+                if code!=update_account_verification_code:
+                    print("wrong code")
+                    return {"response":"wrong_code"}
+                else:
+                    print("password changed")
+                    update_account_verification_code = '0'
+                    code_is_sent = False
+                    return {"response":""}  
+            else:
+                update_account_verification_code = ''.join(choices(digits, k=6))
+                code_is_sent = True
+                send_verification_email(email, update_account_verification_code)
+                return {"response":"changing_pwd"} 
+
         else:
             pass
 

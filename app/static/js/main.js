@@ -41,6 +41,8 @@ document.addEventListener("DOMContentLoaded", function(){
         async function saveAccount() {
             var formData = {
                 "username": document.getElementById('username').value,
+                "email": document.getElementById('email').value,
+                "code": document.getElementById('code').value,
                 "pwd_old": document.getElementById('pwd_old').value,
                 "pwd_new": document.getElementById('pwd_new').value,
             };
@@ -65,6 +67,12 @@ document.addEventListener("DOMContentLoaded", function(){
                 }
                 else if(data["response"]=="wrong_pwd"){
                     document.getElementById("password-message").style.display = "block"
+                }
+                else if (data["response"]=="changing_pwd"){
+                    document.getElementById("code-container").style.display = "block"
+                }
+                else if (data["response"]=="wrong_code"){
+                    document.getElementById("code-message").innerText = "Código errado."
                 }
             })
         }

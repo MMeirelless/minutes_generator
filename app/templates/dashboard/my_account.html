@@ -35,6 +35,15 @@
                             <input type="text" class="form-control" id="username" maxlength="20" minlength="2" value="{{ current_user.username }}">
                         </div>
                         <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" value="{{ current_user.email }}">
+                        </div>
+                        <div class="mb-3" id="code-container" style="display: none;">
+                            <label for="code" class="form-label">Código de Verificação</label>
+                            <p class="form-message" id="code-message">Enviamos um código para o seu e-mail. Entre ele aqui e clique em "Salvar Alterações" novamente.</p>
+                            <input type="text" class="form-control" id="code">
+                        </div>
+                        <div class="mb-3">
                             <label for="pwd_old" class="form-label">Senha Atual</label>
                             <p class="form-message" id="password-message" style="display: none;">A senha está incorreta</p>
                             <input type="password" class="form-control" id="pwd_old">
