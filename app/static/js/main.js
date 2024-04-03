@@ -41,11 +41,12 @@ document.addEventListener("DOMContentLoaded", function(){
         async function saveAccount() {
             var formData = {
                 "username": document.getElementById('username').value,
-                "email": document.getElementById('useremail').value,
                 "pwd_old": document.getElementById('pwd_old').value,
-                "pwd_new": document.getElementById('pwd_new').value
+                "pwd_new": document.getElementById('pwd_new').value,
             };
-            
+
+
+
             fetch("/update_account", {
                 method: "POST",
                 cache: "no-cache",
@@ -59,11 +60,11 @@ document.addEventListener("DOMContentLoaded", function(){
             })
             .then(response => response.json())
             .then(data => {
-                if(data["response"]=="success"){
+                if(data["response"]=="success" | data["response"]=="error"){
                     location.href = "/my_account"
                 }
-                else{
-                    
+                else if(data["response"]=="wrong_pwd"){
+                    document.getElementById("password-message").style.display = "block"
                 }
             })
         }

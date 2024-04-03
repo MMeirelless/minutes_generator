@@ -261,10 +261,11 @@ def update_account():
         data = request.get_json()
 
         username = data["username"]
-        email = data["email"]
+        pwd_old = data["pwd_old"]
+        pwd_new = data["pwd_new"]
 
         is_updating_user = current_user.username != username
-        is_updating_email = current_user.email != email
+        is_updating_password = pwd_old!=pwd_new
 
         if is_updating_user:
             current_user.username = username
@@ -274,9 +275,17 @@ def update_account():
             except IntegrityError:
                 db.session.rollback()
             
-        if is_updating_email:
-            print(f"Old Email: {current_user.email}\nNew Username: {email}")
-
+        if is_updating_password:
+            if check_password_hash(current_user.password, pwd_old):
+                current_user.password = generate_password_hash(pwd_new)
+                try:
+                    db.session.commit()
+                except IntegrityError as e:
+                    db.session.rollback()
+                    flash("Erro ao tentar atualizar a conta, tente novamente.", "error")
+                    return {"response": "error"}
+            else:
+                return {"response":"wrong_pwd"} 
         else:
             pass
 

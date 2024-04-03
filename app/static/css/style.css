@@ -467,6 +467,11 @@ input.input-main.btn-generate {
     margin: auto;
 }
 /* My Profile */
+.form-message {
+    color: red;
+    font-size: 12px;
+}
+
 ul.custom-bullet li {
     list-style-type: disc;
     margin-left: 20px; /* Ajuste conforme necessário */
