@@ -1,6 +1,24 @@
+// Functions
+async function postRequest(endpoint, payload){
+    return fetch(endpoint, {
+        method: "POST",
+        cache: "no-cache",
+        credentials: "same-origin",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        redirect: "follow",
+        referrerPolicy: "no-referrer",
+        body: JSON.stringify(payload),
+    })
+} 
+
 document.addEventListener("DOMContentLoaded", function(){ 
     // My Account
     if (document.getElementById("my_account")){
+        const saveAccountBtn = document.getElementById('saveAccountBtn')
+        const editProfileModal = document.getElementById('editProfileModal');
+
         async function deleteAccount() {
             Swal.fire({
                 title: 'Tem certeza?',
@@ -12,19 +30,8 @@ document.addEventListener("DOMContentLoaded", function(){
                 confirmButtonText: 'Sim, deletar!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    var payload = {};
 
-                    const response = fetch("/delete_account", {
-                        method: "POST",
-                        cache: "no-cache",
-                        credentials: "same-origin",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        redirect: "follow",
-                        referrerPolicy: "no-referrer",
-                        body: JSON.stringify(payload),
-                    });
+                    const response = postRequest("/delete_account", {})
                     Swal.fire(
                         'Deletado!',
                         'Sua conta foi deletada.',
@@ -39,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function(){
             })
         }
         async function saveAccount() {
-            var formData = {
+            var payload = {
                 "username": document.getElementById('username').value,
                 "email": document.getElementById('email').value,
                 "code": document.getElementById('code').value,
@@ -47,39 +54,38 @@ document.addEventListener("DOMContentLoaded", function(){
                 "pwd_new": document.getElementById('pwd_new').value,
             };
 
-
-
-            fetch("/update_account", {
-                method: "POST",
-                cache: "no-cache",
-                credentials: "same-origin",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                redirect: "follow",
-                referrerPolicy: "no-referrer",
-                body: JSON.stringify(formData),
-            })
+            await postRequest("/update_account", payload)
             .then(response => response.json())
             .then(data => {
-                if(data["response"]=="success" | data["response"]=="error"){
+                if(data["response"]=="success" || data["response"]=="error"){
                     location.href = "/my_account"
+                    saveAccountBtn.classList.remove('btn-disabled')
                 }
                 else if(data["response"]=="wrong_pwd"){
                     document.getElementById("password-message").style.display = "block"
+                    saveAccountBtn.classList.remove('btn-disabled')
                 }
-                else if (data["response"]=="changing_pwd"){
+                else if (data["response"]=="changing_email"){
                     document.getElementById("code-container").style.display = "block"
+                    saveAccountBtn.classList.remove('btn-disabled')
                 }
                 else if (data["response"]=="wrong_code"){
                     document.getElementById("code-message").innerText = "Código errado."
+                    saveAccountBtn.classList.remove('btn-disabled')
                 }
             })
         }
-        document.getElementById('closeModal').addEventListener('click', function() {
+
+        editProfileModal.addEventListener('hidden.bs.modal', function () {
+            document.getElementById("password-message").style.display = "none"
             document.querySelector('#editProfileModal .modal-body form').reset();
+            document.getElementById("code-container").style.display = "none";
+            document.getElementById("code-message").innerText = 'Enviamos um código para o seu e-mail. Entre ele aqui e clique em "Salvar Alterações" novamente.';
+            postRequest("/reset_code", {});
         });
-        document.getElementById('saveAccountBtn').addEventListener('click', function(){
+
+        saveAccountBtn.addEventListener('click', function(){
+            this.classList.add('btn-disabled')
             saveAccount()
         })
         document.getElementById('deleteAccountBtn').addEventListener('click', function(){
@@ -137,20 +143,6 @@ document.addEventListener("DOMContentLoaded", function(){
     }
     // My Reports
     if (document.getElementById("my_reports")){
-        async function deleteReport(request_id) {
-            const response = await fetch("/delete_report", {
-                method: "POST",
-                cache: "no-cache",
-                credentials: "same-origin",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                redirect: "follow",
-                referrerPolicy: "no-referrer",
-                body: JSON.stringify({"report_id":request_id}),
-            });
-            return response.json();
-        }
         const deleteButton = document.querySelectorAll(".btn-delete")
     
         if(deleteButton){
@@ -167,8 +159,8 @@ document.addEventListener("DOMContentLoaded", function(){
                     cancelButtonText: 'Cancelar'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            deleteReport(this.dataset.id)
-                            location.href = "/new_report";
+                            postRequest("/delete_report", {"report_id":this.dataset.id})                            
+                            setTimeout(function(){location.href = "/my_reports"}, 100)
                         }
                     });
                 })
@@ -258,17 +250,7 @@ document.addEventListener("DOMContentLoaded", function(){
                         var payload = {"html_content":reportClone.outerHTML,"html_content_title":html_content_title};
                         
                         async function saveReport() {
-                            const response = await fetch("/save_report", {
-                                method: "POST",
-                                cache: "no-cache",
-                                credentials: "same-origin",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                },
-                                redirect: "follow",
-                                referrerPolicy: "no-referrer",
-                                body: JSON.stringify(payload),
-                            });
+                            const response = await postRequest("/save_report", payload)
                             return response.json();
                         }
 
@@ -282,20 +264,6 @@ document.addEventListener("DOMContentLoaded", function(){
     }
     // Trash
     if (document.getElementById("trash")){
-        async function deleteTrash(report_id) {
-            const response = await fetch("/delete_trash", {
-                method: "POST",
-                cache: "no-cache",
-                credentials: "same-origin",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                redirect: "follow",
-                referrerPolicy: "no-referrer",
-                body: JSON.stringify({"report_id":report_id}),
-            });
-            return response.json();
-        }
         const deleteButton = document.querySelectorAll(".btn-delete")
     
         if(deleteButton){
@@ -312,8 +280,8 @@ document.addEventListener("DOMContentLoaded", function(){
                     cancelButtonText: 'Cancelar'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            deleteTrash(this.dataset.id)
-                            location.href = "/new_report";
+                            postRequest("/delete_trash", {"report_id":this.dataset.id})                            
+                            setTimeout(function(){location.href = "/trash"}, 100)
                         }
                     });
                 })
@@ -321,6 +289,7 @@ document.addEventListener("DOMContentLoaded", function(){
         }
     }
 
+    // Register
     if (document.getElementById("register")){
         function openPicModal() {
             $('#picModal').modal('show');

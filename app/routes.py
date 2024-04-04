@@ -111,6 +111,11 @@ def plans():
 @main.route("/my_account")
 def my_account():
     if current_user.is_authenticated:
+        global update_account_verification_code
+        global code_is_sent
+
+        update_account_verification_code = "0"
+        code_is_sent = False
         return render_template('dashboard/my_account.html')
     else:
         return redirect(url_for('main.home'))
@@ -215,19 +220,19 @@ def save_report():
 
 @main.route('/delete_report', methods=["POST"])
 def delete_report():
-    if request.method == "POST" and current_user.is_authenticated and report_user_id == current_user.id:
+    if request.method == "POST" and current_user.is_authenticated:
         report_id = request.get_json()["report_id"]
-        selected_report = Report.query.get(report_id)
         report_user_id = Report.query.filter_by(report_id=report_id).first().user_id
-        # Moving to Trash        
-        new_trash = Trash(report=selected_report.report, report_id=md5(f"{selected_report.report}{datetime.now()}".encode()).hexdigest(), user_id=selected_report.user_id, date=datetime.now(), title=selected_report.title)
-        db.session.add(new_trash)
+        if report_user_id == current_user.id:
+            selected_report = Report.query.get(report_id)
 
-        # Deleting
-        db.session.delete(selected_report)
-        db.session.commit()
+            new_trash = Trash(report=selected_report.report, report_id=md5(f"{selected_report.report}{datetime.now()}".encode()).hexdigest(), user_id=selected_report.user_id, date=datetime.now(), title=selected_report.title)
+            db.session.add(new_trash)
 
-        return {"response":"report deleted"}
+            db.session.delete(selected_report)
+            db.session.commit()
+
+            return {"response":"report deleted"}
     
     else:
         return redirect(url_for('main.home'))
@@ -253,6 +258,18 @@ def delete_account():
         flash('Conta apagada com sucesso.', 'success')
 
         return redirect(url_for('main.home'))
+    else:
+        return redirect(url_for('main.home'))
+
+@main.route('/reset_code', methods=["POST"])
+def reset_code():
+    if current_user.is_authenticated:
+        global update_account_verification_code
+        global code_is_sent
+
+        update_account_verification_code = "0"
+        code_is_sent = False
+        return {"response":"done"}
     else:
         return redirect(url_for('main.home'))
 
@@ -304,20 +321,23 @@ def update_account():
                     print("wrong code")
                     return {"response":"wrong_code"}
                 else:
-                    print("password changed")
+                    current_user.email = email
+                    try:
+                        db.session.commit()
+
+                    except IntegrityError:
+                        db.session.rollback()
                     update_account_verification_code = '0'
                     code_is_sent = False
-                    return {"response":""}  
+                    return {"response":"success"}  
             else:
                 update_account_verification_code = ''.join(choices(digits, k=6))
                 code_is_sent = True
                 send_verification_email(email, update_account_verification_code)
-                return {"response":"changing_pwd"} 
+                return {"response":"changing_email"} 
 
         else:
             pass
-
-        # pensar em lógica para atualizar senha
 
         flash('Conta atualizada com sucesso.', 'success')
         return {"response":"success"}
@@ -326,14 +346,15 @@ def update_account():
 
 @main.route('/delete_trash', methods=["POST"])
 def delete_trash():
-    if request.method == "POST" and current_user.is_authenticated and trash_user_id == current_user.id:
+    if request.method == "POST":
         trash_id = request.get_json()["report_id"]
         selected_trash = Trash.query.get(trash_id)
         trash_user_id = selected_trash.user_id
-        db.session.delete(selected_trash)
-        db.session.commit()
-        flash('Report apagado com sucesso.', 'success')
-        return {"response":"report saved"}
+        if current_user.is_authenticated and trash_user_id == current_user.id:
+            db.session.delete(selected_trash)
+            db.session.commit()
+            flash('Report apagado com sucesso.', 'success')
+            return {"response":"report saved"}
     
     else:
         return redirect(url_for('main.home'))
