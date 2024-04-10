@@ -364,6 +364,9 @@ def update_account():
 
                     except IntegrityError:
                         db.session.rollback()
+                        flash('Email não atualizado. O e-mail já está sendo utilizado.', 'danger')
+                        return {"response":"email_already_used"}
+                               
                     update_account_verification_code = '0'
                     code_is_sent = False
                     return {"response":"success"}  

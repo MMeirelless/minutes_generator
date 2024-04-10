@@ -88,6 +88,9 @@ document.addEventListener("DOMContentLoaded", function(){
                     document.getElementById("code-message").innerText = "Código errado."
                     saveAccountBtn.classList.remove('btn-disabled')
                 }
+                else if (data["response"]=="email_already_used"){
+                    location.href = "/my_account"
+                }
             })
         }
 
