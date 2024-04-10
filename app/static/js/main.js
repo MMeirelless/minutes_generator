@@ -107,9 +107,12 @@ document.addEventListener("DOMContentLoaded", function(){
             deleteAccount()
         })
 
-        document.getElementById('2faBtn').addEventListener('click', function(){
-            enable2FA()
-        })
+        try{
+            document.getElementById('2faBtn').addEventListener('click', function(){
+                enable2FA()
+            })
+        }
+        catch{}
 
         // License Time Chart
         var ctx = document.getElementById('licencaUsageChart').getContext('2d');
