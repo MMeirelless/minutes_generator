@@ -6,13 +6,23 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
 
 <div class="hero-section">
-    <div class="container">
-        <h1>Transforme suas Reuniões com Inteligência Artificial</h1>
-        <p>Capte cada palavra, analise insights e melhore a acessibilidade em tempo real.</p>
-        <br>
-        <a href="{{ url_for('main.plans') }}" class="btn-main">Comece Agora!</a>
+    <video autoplay muted loop id="heroVideo" style="position: absolute; width: 100%; left: 0; top: 0; height: 100%; object-fit: cover; z-index: -2;" preload="auto">
+        <source src="{{ url_for('static', filename='videos/background.mp4') }}" type="video/mp4">
+        Seu navegador não suporta vídeos HTML5.
+    </video>
+    <div class="container home-hero-content">
+        <div class="hero-content">
+            <h1>Transforme suas Reuniões com Inteligência Artificial</h1>
+            <p>Capte cada palavra, analise insights e melhore a acessibilidade em tempo real.</p>
+            <br>
+            <a href="{{ url_for('main.plans') }}" class="btn-main">Comece Agora!</a>
+        </div>
+    </div>
+    <div class="scroll-down-arrow">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="m12 17.586-7.293-7.293-1.414 1.414L12 20.414l8.707-8.707-1.414-1.414L12 17.586z"/><path d="m20.707 5.707-1.414-1.414L12 11.586 4.707 4.293 3.293 5.707 12 14.414l8.707-8.707z"/></svg>
     </div>
 </div>
+
 
 <div class="features-section">
     <div class="container">

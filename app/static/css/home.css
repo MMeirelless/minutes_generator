@@ -18,9 +18,10 @@ body, html {
 
 .hero-section {
     position: relative;
-    color: white; /* Garante que o texto seja branco para contraste */
-    text-align: center; /* Centraliza o texto na seção */
-    padding: 100px 20px; /* Ajuste o padding conforme necessário */
+    color: white;
+    text-align: center;
+    padding: 100px 20px;
+    height: 90vh;
 }
 
 .hero-section::before {
@@ -31,14 +32,12 @@ body, html {
     right: 0;
     bottom: 0;
     background: linear-gradient(
-        rgba(0, 0, 0, 0.7), /* Overlay escuro com opacidade de 70% */
-        rgba(0, 0, 0, 0.7) /* Você pode ajustar a opacidade conforme necessário */
-    ), url('../images/background.webp') no-repeat center center;
-    background-size: cover;
-    opacity: 1; /* Opacidade total para o pseudo-elemento, ajustes feitos via RGBA */
-    z-index: -1; /* Mantém a imagem e o overlay atrás do conteúdo */
+        rgba(0, 0, 0, 0.7), 
+        rgba(0, 0, 0, 0.7)
+    );
+    opacity: 1;
+    z-index: -1;
 }
-
 
 .hero-section .btn-main {
     background-color: #ffc107;
@@ -47,6 +46,36 @@ body, html {
     text-decoration: none;
     border-radius: 5px;
     font-weight: bold;
+}
+
+.container.home-hero-content {
+    justify-content: center;
+    align-items: center;
+    min-height: 100%;
+    display: grid;
+}
+
+.scroll-down-arrow {
+    position: absolute;
+    bottom: 20px; 
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2rem; 
+    fill: #ffc107; 
+    z-index: 10; 
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateX(-50%) translateY(0);
+    }
+    40% {
+        transform: translateX(-50%) translateY(-20px);
+    }
+    60% {
+        transform: translateX(-50%) translateY(-10px);
+    }
 }
 
 .features-section {
