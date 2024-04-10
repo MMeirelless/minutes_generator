@@ -4,4 +4,7 @@ Flask-SQLAlchemy
 Flask-WTF
 email-validator
 Werkzeug
-pyotp
+pydub
+
+# Other
+# ffmpeg > used to convert mp4 to mp3

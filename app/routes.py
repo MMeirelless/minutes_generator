@@ -186,7 +186,7 @@ def new_report():
                 flash('Por favor, selecione um arquivo.', 'danger')
                 return redirect(request.url)
             
-            if audio_file and audio_file.filename.endswith('.mp3'):
+            if audio_file and (audio_file.filename.endswith('.mp3') or audio_file.filename.endswith('.mp4')):
                 doc = Document()
                 result = report_generator(audio_file)  
                 minutes = result[0]
