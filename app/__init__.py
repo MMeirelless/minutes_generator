@@ -25,8 +25,8 @@ def create_app():
     login_manager.init_app(app)
     login_manager.login_view = 'login'
 
-    # with app.app_context():
-    #     db.create_all()
+    with app.app_context():
+        db.create_all()
 
     from .models import User
     @login_manager.user_loader

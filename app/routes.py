@@ -4,7 +4,7 @@ from flask import Blueprint, session, render_template, redirect, url_for, reques
 from flask_login import login_user, logout_user, login_required, current_user
 from . import db
 from .models import User, Report, Trash
-from .forms import LoginForm, RegistrationForm
+from .forms import LoginForm, RegistrationForm, TwoFactorForm
 from .services import report_generator, dict_to_html, send_verification_email
 from werkzeug.security import generate_password_hash, check_password_hash
 from json import dumps 
@@ -13,6 +13,7 @@ from hashlib import md5
 from sqlalchemy.exc import IntegrityError
 from random import randint, choices
 from string import digits
+import pyotp
 
 main = Blueprint('main', __name__)
 update_account_verification_code = "0"
@@ -29,19 +30,49 @@ def home():
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('main.new_report'))
-    
+
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and check_password_hash(user.password, form.password.data):
-            login_user(user, remember=form.remember.data)
-            flash(f'Olá, {current_user.username}!', 'success')
-            return redirect(url_for('main.new_report'))
-
+            if user.two_factor_secret:
+                return render_template('verify_2fa.html', user_id=user.id, form=TwoFactorForm())
+            else:
+                login_user(user, remember=form.remember.data)
+                flash(f'Olá, {user.username}!', 'success')
+                return redirect(url_for('main.new_report'))
         else:
             flash('Não foi possível entrar. Por favor, verifique seu e-mail e senha.', 'danger')
 
     return render_template('login.html', title='Login', form=form)
+
+@main.route('/verify_2fa', methods=['GET', 'POST'])
+def verify_2fa():
+    form = TwoFactorForm()
+    if form.validate_on_submit():
+        user_id = request.form.get('user_id')
+        user = User.query.get(user_id)
+        print(pyotp.TOTP(user.two_factor_secret))
+        if user and pyotp.TOTP(user.two_factor_secret).verify(form.token.data):
+            login_user(user, remember=True)
+            return redirect(url_for('main.new_report'))
+        else:
+            flash('Token inválido.', 'danger')
+            return render_template('verify_2fa.html', user_id=user_id, form=TwoFactorForm())
+        
+    return render_template('verify_2fa.html', form=form)
+
+@main.route('/setup_2fa')
+def setup_2fa():
+    if not current_user.is_authenticated:
+        return redirect(url_for('main.login'))
+
+    secret = pyotp.random_base32()
+    current_user.two_factor_secret = secret
+    db.session.commit()
+
+    url = pyotp.totp.TOTP(secret).provisioning_uri(current_user.email, issuer_name='Keysession')
+    return render_template('setup_2fa.html', secret=secret, url=url)
 
 @main.route('/register', methods=['GET', 'POST'])
 def register():

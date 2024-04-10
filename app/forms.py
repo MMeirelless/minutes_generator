@@ -9,6 +9,10 @@ class LoginForm(FlaskForm):
     remember = BooleanField('Lembrar acesso')
     submit = SubmitField('Entrar')
 
+class TwoFactorForm(FlaskForm):
+    token = StringField('Código de Verificação', validators=[DataRequired(message="O código de verificação é obrigatório.")])
+    submit = SubmitField('Verificar')
+
 class RegistrationForm(FlaskForm):
     username = StringField('Nome', validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email', validators=[DataRequired(), Email()])

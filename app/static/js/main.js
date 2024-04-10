@@ -45,6 +45,21 @@ document.addEventListener("DOMContentLoaded", function(){
                 }
             })
         }
+        async function enable2FA() {
+            Swal.fire({
+                title: 'Ativar Verificação de Dois Fatores?',
+                text: "Você não poderá reverter isso!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sim, ativar!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    location.href="/setup_2fa"
+                }
+            })
+        }
         async function saveAccount() {
             var payload = {
                 "username": document.getElementById('username').value,
@@ -90,6 +105,10 @@ document.addEventListener("DOMContentLoaded", function(){
         })
         document.getElementById('deleteAccountBtn').addEventListener('click', function(){
             deleteAccount()
+        })
+
+        document.getElementById('2faBtn').addEventListener('click', function(){
+            enable2FA()
         })
 
         // License Time Chart

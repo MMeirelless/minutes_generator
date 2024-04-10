@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="verify-2fa-container form-container">
+    <form action="{{ url_for('main.verify_2fa') }}" method="post" class="form-box">
+        <h2>Verificação de Dois Fatores</h2>
+        <br>
+        {{ current_user.username }}
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.token.label }}
+            {{ form.token(class_="form-control") }}
+            {% if form.token.errors %}
+                {% for error in form.token.errors %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+            <input type="hidden" name="user_id" value="{{ user_id }}">
+        </div>
+        <div class="form-group">
+            {{ form.submit(class_="btn btn-primary") }}
+        </div>
+    </form>
+</div>
+{% endblock %}

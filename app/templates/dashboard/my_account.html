@@ -123,7 +123,8 @@
         <div class="row">
             <div class="col">
                 <h4>Histórico de Acesso</h4>
-                <div class="table-responsive">
+                <span class="badge text-bg-primary">Em breve</span>
+                <div class="table-responsive btn-disabled">
                     <table class="table">
                         <thead>
                             <tr>
@@ -171,12 +172,15 @@
         </ul>
         <br>
         <div class="buttons-container">
-            <button class="btn btn-default">Verificação de dois fatores</button>
+            {% if not current_user.two_factor_secret: %}
+            <!-- <a href="{{ url_for('main.setup_2fa') }}" class="btn btn-default">Verificação de dois fatores</a> -->
+            <button class="btn btn-default" id="2faBtn">Verificação de dois fatores</button>
+            {% endif %}
             <button class="btn btn-secondary dengerous-btns" id="deleteAccountBtn">Deletar Conta</button>
         </div>
     </div>
 </section>
-<section class="notification-settings mt-4">
+<!-- <section class="notification-settings mt-4">
     <h3>Configurações de Notificações</h3>
     <form>
         <div class="form-check">
@@ -192,7 +196,7 @@
             </label>
         </div>
     </form>
-</section>
+</section> -->
 <style>
     .dashboard{
         padding: 0;

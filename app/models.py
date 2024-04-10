@@ -10,6 +10,7 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(60), nullable=False)
     plan = db.Column(db.String(20), nullable=False, default='Grátis')
     user_pic = db.Column(db.String(250), nullable=False, default=f"/static/images/user_pictures/user{randint(1, 6)}.webp")
+    two_factor_secret = db.Column(db.String(100))
     reports = db.relationship('Report', backref='author', lazy=True)
 
 class Report(db.Model):

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Configuração da Autenticação de Dois Fatores{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="form-box">
+        <h2>Configuração da Autenticação de Dois Fatores</h2>
+        <p>Escaneie o QR Code abaixo usando um aplicativo de autenticação no seu dispositivo móvel, como o Google Authenticator ou Authy.</p>
+        <div id="qrcode"></div>
+        <p>Guarde sua chave secreta de forma segura: <strong>{{ secret }}</strong></p>
+        <p style="color: red;">Após adicionar sua conta ao aplicativo de autenticação, você precisará fornecer um código de verificação do aplicativo sempre que fizer login.</p>
+        <button onclick="location.href='{{ url_for('main.my_account') }}'" class="btn btn-primary">Concluído</button>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+<script type="text/javascript">
+    var qrcode = new QRCode(document.getElementById("qrcode"), {
+        text: "{{ url }}",
+        width: 128,
+        height: 128,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+    });
+</script>
+{% endblock %}
