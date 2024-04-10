@@ -42,6 +42,10 @@ li#user_nav_btns {
 }
 
 /* Login e Register */
+div#terms {
+    overflow-y: scroll;
+    max-height: 600px;
+}
 div#remember,
 div#signup {
     margin-top: 10px;

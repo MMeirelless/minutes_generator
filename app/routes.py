@@ -104,25 +104,31 @@ def verify_email():
         user_code = request.form['verification_code']
 
         if user_code == session.get('verification_code'):
-            existing_user = User.query.filter_by(email=session.get('email')).first()
-            if existing_user:
-                flash('Email já em uso. Por favor, escolha outro.', 'danger')
-                return redirect(url_for('main.register'))
+            try:
+                existing_user = User.query.filter_by(email=session.get('email')).first()
+                if existing_user:
+                    flash('Email já em uso. Por favor, escolha outro.', 'danger')
+                    return redirect(url_for('main.register'))
+                
+                user = User(username=session.get('username'), email=session.get('email'), password=session.get('password'), plan=session.get('plan'), user_pic=session.get('user_pic'))
+                db.session.add(user)
+                db.session.commit()
+
+                session.pop('email', None)
+                session.pop('username', None)
+                session.pop('password', None)
+                session.pop('plan', None)
+                session.pop('user_pic', None)
+                session.pop('verification_code', None)
+
+                flash('Sua conta foi criada! Bem vindo!', 'success')
+                return redirect(url_for('main.login'))
             
-            user = User(username=session.get('username'), email=session.get('email'), password=session.get('password'), plan=session.get('plan'), user_pic=session.get('user_pic'))
-            db.session.add(user)
-            db.session.commit()
-
-            session.pop('email', None)
-            session.pop('username', None)
-            session.pop('password', None)
-            session.pop('plan', None)
-            session.pop('user_pic', None)
-            session.pop('verification_code', None)
-
-            flash('Sua conta foi criada! Bem vindo!', 'success')
-            return redirect(url_for('main.login'))
-        
+            except IntegrityError:
+                db.session.rollback()
+                flash('Erro ao criar conta, por favor, tente novamente.', 'danger')
+                return redirect(url_for('main.register'))
+                    
         else:
             flash('Código de verificação inválido.', 'danger')
             return redirect(url_for('main.verify_email'))
@@ -402,3 +408,19 @@ def trash():
 @main.route("/recording")
 def recording():
     return render_template("recording.html")
+
+@main.route("/privacy_policy")
+def privacy_policy():
+    return render_template("privacy_policy.html")
+
+@main.route("/terms")
+def terms():
+    return render_template("terms.html")
+
+@main.route("/history")
+def history():
+    return render_template("history.html")
+
+@main.route("/security_guide")
+def security_guide():
+    return render_template("security_guide.html")

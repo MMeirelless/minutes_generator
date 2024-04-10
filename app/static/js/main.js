@@ -331,5 +331,8 @@ document.addEventListener("DOMContentLoaded", function(){
         document.querySelector("#user-pic").addEventListener("click", function(){
             openPicModal()
         })
+        document.getElementById("signup").addEventListener("click", function(){
+            this.classList.add('btn-disabled')
+        })
     }
 })
